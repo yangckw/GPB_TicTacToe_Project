@@ -5,8 +5,17 @@
 #include <string>
 #include <cmath>
 
+#ifdef _WIN32
 #include <SDL2\SDL.h>
 #include <SDL\SDL_image.h>
+#elif _linux
+#include <SDL2/SDL.h>
+#include <SDL/SDL_image.h>
+#endif // _WIN32
+
+
+//#include <SDL2/SDL.h>
+
 
 using std::string;
 using std::cout;
