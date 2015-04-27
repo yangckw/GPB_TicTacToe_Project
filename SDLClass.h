@@ -5,10 +5,10 @@
 #include <string>
 #include <cmath>
 
-#ifdef _WIN32
+#if _WIN32
 #include <SDL2\SDL.h>
 #include <SDL\SDL_image.h>
-#elif _linux
+#else
 #include <SDL2/SDL.h>
 #include <SDL/SDL_image.h>
 #endif // _WIN32
