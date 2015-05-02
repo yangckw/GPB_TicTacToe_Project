@@ -1,31 +1,48 @@
 /*************************************************************/
 //					Tic Tac Toe Project
 /*************************************************************/
-#include "SDLClass.h"
+#include "GameClass.h"
 
 int main(int argc, char* args[])
-{
-	MySDL2 *sdl = new MySDL2;
-	bool quit = false;
-	SDL_Event e;
-	
+{	
+	Game *game = new Game();
+	Player player1(0, true, false);
+	Player player2(0, false, false);
 
-	// Main loop
-	while (!quit)
+	bool runEngine = true;
+	bool isInitialized = false;
+	SDL_Event e;
+
+	game->setState(Init);
+
+	while (runEngine)
 	{
+		switch (game->returnState())
+		{
+		case Init:
+			isInitialized = game->Initialize();
+
+			if (isInitialized)	{ game->setState(MainMenu); }
+			else				{ game->setState(ExitGame); }
+
+			break;
+		case MainMenu:
+			game->mainMenu();
+			break;
+		case GameRunning:
+			break;
+		case ExitGame:
+			runEngine = false;
+			break;
+		}
+
 		while (SDL_PollEvent(&e) != 0)
 		{
-			if (e.type == SDL_QUIT)
-				quit = true;
+			if (e.type == SDL_QUIT) { game->setState(ExitGame); }
 		}
-		sdl->renderClear();
-		sdl->render();
-		sdl->renderUpdate();
 	}
 
-	sdl->~MySDL2();
-
-	delete sdl;
+	game->exitGame();
 
 	return 0;
 }

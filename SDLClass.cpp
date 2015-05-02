@@ -52,6 +52,8 @@ bool MySDL2::init()
 				}
 			}			
 		}
+
+		//gameState = MainMenu;
 	}
 
 	return success;
@@ -67,7 +69,6 @@ bool MySDL2::loadMedia(string path)
 		cout << "Failed to load texture image!\n";
 		success = false;
 	}
-
 	return success;
 }
 
@@ -115,43 +116,18 @@ void MySDL2::close()
 
 void MySDL2::renderClear() { SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF); SDL_RenderClear(gRenderer); }
 
-void MySDL2::render()
+void MySDL2::renderMenu()
 {
 	//Top left corner viewport
-	SDL_Rect topLeftViewport;
-	topLeftViewport.x = 0;
-	topLeftViewport.y = 0;
-	topLeftViewport.w = SCREEN_WIDTH / 2;
-	topLeftViewport.h = SCREEN_HEIGHT / 2;
-	SDL_RenderSetViewport(gRenderer, &topLeftViewport);
+	SDL_Rect backGround;
+	backGround.x = 0;
+	backGround.y = 0;
+	backGround.w = SCREEN_WIDTH;
+	backGround.h = SCREEN_HEIGHT;
+	SDL_RenderSetViewport(gRenderer, &backGround);
 
 	//Render texture to screen
-	SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
-
-
-	//Top right viewport
-	SDL_Rect topRightViewport;
-	topRightViewport.x = SCREEN_WIDTH / 2;
-	topRightViewport.y = 0;
-	topRightViewport.w = SCREEN_WIDTH / 2;
-	topRightViewport.h = SCREEN_HEIGHT / 2;
-	SDL_RenderSetViewport(gRenderer, &topRightViewport);
-
-	//Render texture to screen
-	SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
-
-
-	//Bottom viewport
-	SDL_Rect bottomViewport;
-	bottomViewport.x = 0;
-	bottomViewport.y = SCREEN_HEIGHT / 2;
-	bottomViewport.w = SCREEN_WIDTH;
-	bottomViewport.h = SCREEN_HEIGHT / 2;
-	SDL_RenderSetViewport(gRenderer, &bottomViewport);
-
-
-	//Render texture to screen
-	SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);
+	SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);	
 }
 
 void MySDL2::renderUpdate() { SDL_RenderPresent(gRenderer); }

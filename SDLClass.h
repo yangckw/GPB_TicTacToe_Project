@@ -7,22 +7,18 @@
 
 #if _WIN32
 #include <SDL2\SDL.h>
-#include <SDL\SDL_image.h>
+#include <SDL2\SDL_image.h>
 #else
-#include <SDL2/SDL.h>
-#include <SDL/SDL_image.h>
-#endif // _WIN32
-
-
-//#include <SDL2/SDL.h>
-
+#include <SDL2\SDL.h>
+#include <SDL\SDL_image.h>
+#endif
 
 using std::string;
 using std::cout;
 
 #pragma comment(lib, "SDL2.lib")
 #pragma comment(lib, "SDL2main.lib")
-#pragma comment(lib, "SDL_image.lib")
+#pragma comment(lib, "SDL2_image.lib")
 
 class MySDL2
 {
@@ -42,7 +38,7 @@ public:
 	bool loadMedia(string filename);
 	SDL_Texture* loadTexture(string path);
 	void renderClear();
-	void render();
+	void renderMenu();
 	void renderUpdate();
 	void close();
 
