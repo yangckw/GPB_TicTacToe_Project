@@ -85,6 +85,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameBoard.h" />
     <ClInclude Include="GameClass.h" />
     <ClInclude Include="SDLClass.h" />
   </ItemGroup>

@@ -23,9 +23,17 @@ class Game
 private:
 	GameState gameState;
 	MySDL2 *sdl = new MySDL2;
+	SDL_Texture* logoImage;
+	SDL_Rect* mainMenuRect;
+	SDL_Texture* startButton;
+	SDL_Rect* startButtonRect;
+	SDL_Texture* quitButton;
+	SDL_Rect* quitButtonRect;
 public:
 	Game();
 	~Game();
+	int mouseX;
+	int mouseY;
 
 	void showSplashScreen();
 	bool Initialize();

@@ -3,13 +3,22 @@
 // Deconstructor
 Game::~Game()
 {
-	sdl->~MySDL2();
+	// Close out Game Class
+	exitGame();
 
+	// Shutdown SDL2 Class
+	sdl->~MySDL2();
 	if (sdl)	{ delete sdl; sdl = NULL; }
 }
 
 // Overloaded constructor
-Game::Game() : gameState(NullState) {}
+Game::Game() : gameState(NullState), logoImage(NULL), mainMenuRect(NULL), startButtonRect(NULL),
+				startButton(NULL), quitButton(NULL), quitButtonRect(NULL), mouseX(0), mouseY(0)
+{
+	mainMenuRect		= new SDL_Rect;
+	startButtonRect		= new SDL_Rect;
+	quitButtonRect		= new SDL_Rect;
+}
 
 bool Game::Initialize()
 {
@@ -31,22 +40,19 @@ bool Game::Initialize()
 
 void Game::mainMenu()
 {
-	SDL_Texture* logoImage = sdl->loadTexture("Menu.png");
-	SDL_Rect* mainMenuRect = new SDL_Rect;
+	logoImage = sdl->loadTexture("Menu.png");	
 	mainMenuRect->x = 0;
 	mainMenuRect->y = 0;
 	mainMenuRect->w = sdl->returnWidth();
 	mainMenuRect->h = sdl->returnHeight();
 	
-	SDL_Texture* startButton = sdl->loadTexture("StartButton.png");
-	SDL_Rect* startButtonRect = new SDL_Rect;
+	startButton = sdl->loadTexture("StartButton.png");	
 	startButtonRect->x = sdl->returnWidth() / 2 - 50;
 	startButtonRect->y = sdl->returnHeight() / 2;
 	startButtonRect->w = 100;
 	startButtonRect->h = 40;
 
-	SDL_Texture* quitButton = sdl->loadTexture("QuitButton.png");
-	SDL_Rect* quitButtonRect = new SDL_Rect;
+	quitButton = sdl->loadTexture("QuitButton.png");
 	quitButtonRect->x = sdl->returnWidth() / 2 - 50;
 	quitButtonRect->y = sdl->returnHeight() / 2 + 80;	// Move button down by 80
 	quitButtonRect->w = 100;
@@ -58,6 +64,25 @@ void Game::mainMenu()
 	sdl->myRenderCopy(startButton, startButtonRect);
 	sdl->myRenderCopy(quitButton, quitButtonRect);
 	sdl->renderUpdate();
+
+	SDL_Event e;
+
+	SDL_PollEvent(&e);
+
+	// Mouse checks for the buttons (Start)
+	if (mouseX >= startButtonRect->x && mouseX <= startButtonRect->x + startButtonRect->w &&
+		mouseY >= startButtonRect->y && mouseY <= startButtonRect->y + startButtonRect->h)
+	{
+		if (e.type == SDL_MOUSEBUTTONDOWN) { gameState = GameRunning; }
+	}
+
+	// Mouse checks for the buttons (Quit)
+	if (mouseX >= quitButtonRect->x && mouseX <= quitButtonRect->x + quitButtonRect->w &&
+		mouseY >= quitButtonRect->y && mouseY <= quitButtonRect->y + quitButtonRect->h)
+	{
+		if (e.type == SDL_MOUSEBUTTONDOWN) { gameState = ExitGame; }
+	}
+
 }
 
 bool Game::runGame()
@@ -66,8 +91,19 @@ bool Game::runGame()
 }
 
 void Game::exitGame()
-{
+{	
+	// Close extra memory usage
+	SDL_DestroyTexture(logoImage);
+	logoImage = NULL;
+	if (mainMenuRect)		{ delete mainMenuRect; }
 
+	if (startButtonRect)	{ delete startButtonRect; }
+	SDL_DestroyTexture(startButton);
+	startButton = NULL;
+
+	if (quitButtonRect)		{ delete quitButtonRect; }
+	SDL_DestroyTexture(quitButton);
+	quitButton = NULL;
 }
 
 void Game::gameUpdate()

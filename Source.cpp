@@ -43,9 +43,12 @@ int main(int argc, char* args[])
 		{
 			if (e.type == SDL_QUIT) { game->setState(ExitGame); }
 		}
+
+		// Update mouse
+		SDL_GetMouseState(&game->mouseX, &game->mouseY);
 	}
 
-	game->exitGame();
+	game->~Game();
 
 	return 0;
 }
