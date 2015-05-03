@@ -66,7 +66,6 @@ void Game::mainMenu()
 	sdl->renderUpdate();
 
 	SDL_Event e;
-
 	SDL_PollEvent(&e);
 
 	// Mouse checks for the buttons (Start)
@@ -82,7 +81,6 @@ void Game::mainMenu()
 	{
 		if (e.type == SDL_MOUSEBUTTONDOWN) { gameState = ExitGame; }
 	}
-
 }
 
 bool Game::runGame()
@@ -119,7 +117,7 @@ void Game::showSplashScreen()
 	logoImageRect->x = 0;
 	logoImageRect->y = 0;
 	logoImageRect->w = sdl->returnWidth();
-	logoImageRect->h = sdl->returnHeight();
+	logoImageRect->h = sdl->returnHeight();	
 	sdl->renderClear();
 	sdl->myRenderCopy(splashImage, logoImageRect);
 	sdl->renderUpdate();
@@ -127,5 +125,4 @@ void Game::showSplashScreen()
 	// Pause the splash screen for 5 seconds
 	SDL_Delay(5000);
 	gameState = MainMenu;
-
 }
