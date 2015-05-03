@@ -31,16 +31,32 @@ bool Game::Initialize()
 
 void Game::mainMenu()
 {
-	sdl->loadMedia("Menu.png");
-	SDL_Rect mainMenu_Rect;
-	mainMenu_Rect.x = 0;
-	mainMenu_Rect.y = 0;
-	mainMenu_Rect.w = sdl->returnWidth();
-	mainMenu_Rect.h = sdl->returnHeight();
+	SDL_Texture* logoImage = sdl->loadTexture("Menu.png");
+	SDL_Rect* mainMenuRect = new SDL_Rect;
+	mainMenuRect->x = 0;
+	mainMenuRect->y = 0;
+	mainMenuRect->w = sdl->returnWidth();
+	mainMenuRect->h = sdl->returnHeight();
+	
+	SDL_Texture* startButton = sdl->loadTexture("StartButton.png");
+	SDL_Rect* startButtonRect = new SDL_Rect;
+	startButtonRect->x = sdl->returnWidth() / 2 - 50;
+	startButtonRect->y = sdl->returnHeight() / 2;
+	startButtonRect->w = 100;
+	startButtonRect->h = 40;
+
+	SDL_Texture* quitButton = sdl->loadTexture("QuitButton.png");
+	SDL_Rect* quitButtonRect = new SDL_Rect;
+	quitButtonRect->x = sdl->returnWidth() / 2 - 50;
+	quitButtonRect->y = sdl->returnHeight() / 2 + 80;	// Move button down by 80
+	quitButtonRect->w = 100;
+	quitButtonRect->h = 40;
 	
 	// Render the splash screen
 	sdl->renderClear();
-	sdl->render();
+	sdl->myRenderCopy(logoImage, mainMenuRect);
+	sdl->myRenderCopy(startButton, startButtonRect);
+	sdl->myRenderCopy(quitButton, quitButtonRect);
 	sdl->renderUpdate();
 }
 
@@ -61,16 +77,15 @@ void Game::gameUpdate()
 
 void Game::showSplashScreen()
 {
-	sdl->loadMedia("TicTacToeLogo.png");
-	SDL_Rect logoImage_Rect;
-	logoImage_Rect.x = 0;
-	logoImage_Rect.y = 0;
-	logoImage_Rect.w = sdl->returnWidth();
-	logoImage_Rect.h = sdl->returnHeight();
-
-	// Render the splash screen
+	SDL_Texture* splashImage = sdl->loadTexture("TicTacToeLogo.png");
+	if (splashImage == NULL) { cout << "Error Loading Splash Image!!\n"; }
+	SDL_Rect* logoImageRect = new SDL_Rect;
+	logoImageRect->x = 0;
+	logoImageRect->y = 0;
+	logoImageRect->w = sdl->returnWidth();
+	logoImageRect->h = sdl->returnHeight();
 	sdl->renderClear();
-	sdl->render();
+	sdl->myRenderCopy(splashImage, logoImageRect);
 	sdl->renderUpdate();
 
 	// Pause the splash screen for 5 seconds

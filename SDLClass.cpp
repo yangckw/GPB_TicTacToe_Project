@@ -116,6 +116,11 @@ void MySDL2::close()
 
 void MySDL2::renderClear() { SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF); SDL_RenderClear(gRenderer); }
 
-void MySDL2::render() { SDL_RenderCopy(gRenderer, gTexture, NULL, NULL); }
+void MySDL2::render() { SDL_RenderPresent(gRenderer); }
 
 void MySDL2::renderUpdate() { SDL_RenderPresent(gRenderer); }
+
+void MySDL2::myRenderCopy(SDL_Texture* texture, SDL_Rect* myRect)
+{
+	SDL_RenderCopy(gRenderer, texture, NULL, myRect);
+}

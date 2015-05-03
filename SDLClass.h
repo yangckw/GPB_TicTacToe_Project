@@ -39,6 +39,7 @@ public:
 	SDL_Texture* loadTexture(string path);
 	void renderClear();
 	void render();
+	void myRenderCopy(SDL_Texture* texture, SDL_Rect* rect);
 	void renderUpdate();
 	void close();
 
