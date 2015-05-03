@@ -22,9 +22,12 @@ int main(int argc, char* args[])
 		case Init:
 			isInitialized = game->Initialize();
 
-			if (isInitialized)	{ game->setState(MainMenu); }
+			if (isInitialized)	{ game->setState(SplashScreen); }
 			else				{ game->setState(ExitGame); }
 
+			break;
+		case SplashScreen:
+			game->showSplashScreen();
 			break;
 		case MainMenu:
 			game->mainMenu();

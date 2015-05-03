@@ -3,7 +3,7 @@
 /*************************************************************/
 #include "SDLClass.h"
 
-enum GameState {NullState, Init, MainMenu, GameRunning, ExitGame};
+enum GameState {NullState, Init, SplashScreen, MainMenu, GameRunning, ExitGame};
 
 struct Player
 {
@@ -26,6 +26,8 @@ private:
 public:
 	Game();
 	~Game();
+
+	void showSplashScreen();
 	bool Initialize();
 	void mainMenu();
 	bool runGame();

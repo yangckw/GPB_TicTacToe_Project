@@ -116,18 +116,6 @@ void MySDL2::close()
 
 void MySDL2::renderClear() { SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF); SDL_RenderClear(gRenderer); }
 
-void MySDL2::renderMenu()
-{
-	//Top left corner viewport
-	SDL_Rect backGround;
-	backGround.x = 0;
-	backGround.y = 0;
-	backGround.w = SCREEN_WIDTH;
-	backGround.h = SCREEN_HEIGHT;
-	SDL_RenderSetViewport(gRenderer, &backGround);
-
-	//Render texture to screen
-	SDL_RenderCopy(gRenderer, gTexture, NULL, NULL);	
-}
+void MySDL2::render() { SDL_RenderCopy(gRenderer, gTexture, NULL, NULL); }
 
 void MySDL2::renderUpdate() { SDL_RenderPresent(gRenderer); }

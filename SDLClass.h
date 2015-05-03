@@ -38,7 +38,7 @@ public:
 	bool loadMedia(string filename);
 	SDL_Texture* loadTexture(string path);
 	void renderClear();
-	void renderMenu();
+	void render();
 	void renderUpdate();
 	void close();
 
@@ -47,4 +47,5 @@ public:
 	int returnHeight()							{ return SCREEN_HEIGHT; }
 	SDL_Surface* returngScreenSurface()			{ return gScreenSurface; }
 	SDL_Window* returngWindow()					{ return gWindow; }
+	SDL_Renderer* returnRender()				{ return gRenderer; }
 };
