@@ -38,6 +38,29 @@ bool Game::Initialize()
 	return error;
 }
 
+/*
+	//The music that will be played
+	Mix_Music *gLoop = NULL;
+
+	//The sound effects that will be used
+	Mix_Chunk *gBlop = NULL;
+	Mix_Chunk *gWoosh = NULL;
+*/
+
+bool Game::loadAudio()
+{
+	bool error = true;
+
+	//Load music
+	gLoop = Mix_LoadMUS("Audio/Loop_120_bpm.wav");
+	
+	//Load sound effects
+	gBlop = Mix_LoadWAV("Audio/Blop.wav");
+	gWoosh = Mix_LoadWAV("Audio/Woosh.wav");
+
+	return error;
+}
+
 void Game::mainMenu()
 {
 	logoImage = sdl->loadTexture("Menu.png");	
@@ -90,6 +113,14 @@ bool Game::runGame()
 
 void Game::exitGame()
 {	
+	//Free the audio effects
+	Mix_FreeChunk(gBlop);
+	Mix_FreeChunk(gWoosh);
+	Mix_FreeMusic(gLoop);
+	gBlop = NULL;
+	gWoosh = NULL;
+	gLoop = NULL;
+
 	// Close extra memory usage
 	SDL_DestroyTexture(logoImage);
 	logoImage = NULL;
@@ -102,6 +133,7 @@ void Game::exitGame()
 	if (quitButtonRect)		{ delete quitButtonRect; }
 	SDL_DestroyTexture(quitButton);
 	quitButton = NULL;
+	
 }
 
 void Game::gameUpdate()
@@ -114,15 +146,28 @@ void Game::showSplashScreen()
 	SDL_Texture* splashImage = sdl->loadTexture("TicTacToeLogo.png");
 	if (splashImage == NULL) { cout << "Error Loading Splash Image!!\n"; }
 	SDL_Rect* logoImageRect = new SDL_Rect;
+
+
+	
 	logoImageRect->x = 0;
 	logoImageRect->y = 0;
 	logoImageRect->w = sdl->returnWidth();
 	logoImageRect->h = sdl->returnHeight();	
+
+
 	sdl->renderClear();
 	sdl->myRenderCopy(splashImage, logoImageRect);
 	sdl->renderUpdate();
 
-	// Pause the splash screen for 5 seconds
-	SDL_Delay(5000);
+
+	//Play the music
+	if (Mix_PlayingMusic() == 0)
+	{
+		//Play the music
+		Mix_PlayMusic(gLoop, -1);
+	}
+
+	// Pause the splash screen for 3 seconds *modified for faster testing
+	SDL_Delay(3000);
 	gameState = MainMenu;
 }
