@@ -20,15 +20,6 @@ Game::Game() : gameState(NullState), logoImage(NULL), mainMenuRect(NULL), startB
 	quitButtonRect		= new SDL_Rect;
 }
 
-
-	//The music that will be played
-	Mix_Music *gLoop = NULL;
-
-	//The sound effects that will be used
-	Mix_Chunk *gBlop = NULL;
-	Mix_Chunk *gWoosh = NULL;
-
-
 bool Game::Initialize()
 {
 	bool error = true;
@@ -36,75 +27,28 @@ bool Game::Initialize()
 	// SDL initialize
 	if (!sdl->init()) { cout << "Failed to initialize!\n"; error = false; }
 
-	// Load images
-	//if (!sdl->loadMedia("StartButton.png"))		{ cout << "Failed to load startButton.png!\n"; error = false; }
-	//if (!sdl->loadMedia("QuitButton.png"))		{ cout << "Failed to load quitButton.png!\n"; error = false; }
-
-	// Input initalilize
-
-
-	// Audio initalilize
-//	if (!sdl->loadMedia()) { cout << "Failed to initialize!\n"; error = false; }
-
-
-
-	//Initialize SDL_mixer
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-	{	printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
-		error = false;	}
-
 	return error;
-}
-
-bool Game::loadMedia()
-{
-	//Loading success flag
-	bool error = true;
-
-	//Load music
-	gLoop = Mix_LoadMUS("Audio/Loop_120_bpm.wav");
-	if (gLoop == NULL)
-	{	printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
-		error = false;	}
-
-	//Load sound effects
-	gBlop = Mix_LoadWAV("Audio/Blop.wav");
-	if (gBlop == NULL)
-	{	printf("Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError());
-		error = false;	}
-
-	gWoosh = Mix_LoadWAV("Audio/Woosh.wav");
-	if (gWoosh == NULL)
-	{	printf("Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError());
-		error = false;	}
-
-	return error;
-	
 }
 
 void Game::mainMenu()
 {
-	logoImage = sdl->loadTexture("Menu.png");	
+	logoImage = sdl->loadTexture("Images/Menu.png");	
 	mainMenuRect->x = 0;
 	mainMenuRect->y = 0;
 	mainMenuRect->w = sdl->returnWidth();
 	mainMenuRect->h = sdl->returnHeight();
 	
-	startButton = sdl->loadTexture("StartButton.png");	
+	startButton = sdl->loadTexture("Images/StartButton.png");	
 	startButtonRect->x = sdl->returnWidth() / 2 - 50;
 	startButtonRect->y = sdl->returnHeight() / 2;
 	startButtonRect->w = 100;
 	startButtonRect->h = 40;
 
-	quitButton = sdl->loadTexture("QuitButton.png");
+	quitButton = sdl->loadTexture("Images/QuitButton.png");
 	quitButtonRect->x = sdl->returnWidth() / 2 - 50;
 	quitButtonRect->y = sdl->returnHeight() / 2 + 80;	// Move button down by 80
 	quitButtonRect->w = 100;
 	quitButtonRect->h = 40;
-
-	// Play file
-//	Mix_PlayMusic( gLoop, -1);
-//	Mix_PlayChannel(-1, gBlop, 0);
 	
 	// Render the splash screen
 	sdl->renderClear();
@@ -120,14 +64,18 @@ void Game::mainMenu()
 	if (mouseX >= startButtonRect->x && mouseX <= startButtonRect->x + startButtonRect->w &&
 		mouseY >= startButtonRect->y && mouseY <= startButtonRect->y + startButtonRect->h)
 	{
-		if (e.type == SDL_MOUSEBUTTONDOWN) { gameState = GameRunning; }
+		if (e.type == SDL_MOUSEBUTTONDOWN) 
+		{
+			//gameState = GameRunning;
+			sdl->playerBlop();
+		}
 	}
 
 	// Mouse checks for the buttons (Quit)
 	if (mouseX >= quitButtonRect->x && mouseX <= quitButtonRect->x + quitButtonRect->w &&
 		mouseY >= quitButtonRect->y && mouseY <= quitButtonRect->y + quitButtonRect->h)
 	{
-		if (e.type == SDL_MOUSEBUTTONDOWN) { gameState = ExitGame; }
+		if (e.type == SDL_MOUSEBUTTONDOWN) { gameState = ExitGame; Mix_HaltMusic(); }
 	}
 }
 
@@ -138,13 +86,6 @@ bool Game::runGame()
 
 void Game::exitGame()
 {	
-	//Free the audio effects
-	Mix_FreeChunk(gBlop);
-	Mix_FreeChunk(gWoosh);
-	Mix_FreeMusic(gLoop);
-	gBlop = NULL;
-	gWoosh = NULL;
-	gLoop = NULL;
 
 	// Close extra memory usage
 	SDL_DestroyTexture(logoImage);
@@ -157,8 +98,7 @@ void Game::exitGame()
 
 	if (quitButtonRect)		{ delete quitButtonRect; }
 	SDL_DestroyTexture(quitButton);
-	quitButton = NULL;
-	
+	quitButton = NULL;	
 }
 
 void Game::gameUpdate()
@@ -168,7 +108,9 @@ void Game::gameUpdate()
 
 void Game::showSplashScreen()
 {
-	SDL_Texture* splashImage = sdl->loadTexture("TicTacToeLogo.png");
+	sdl->playLoop120();
+
+	SDL_Texture* splashImage = sdl->loadTexture("Images/TicTacToeLogo.png");
 	if (splashImage == NULL) { cout << "Error Loading Splash Image!!\n"; }
 	SDL_Rect* logoImageRect = new SDL_Rect;
 	

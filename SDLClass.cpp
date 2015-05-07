@@ -1,7 +1,8 @@
 #include "SDLClass.h"
 
 MySDL2::MySDL2() : gScreenSurface(NULL), gRenderer(NULL),
-					SCREEN_HEIGHT(480), SCREEN_WIDTH(640), gWindow(NULL), gTexture(NULL) {}
+					SCREEN_HEIGHT(480), SCREEN_WIDTH(640), gWindow(NULL), gTexture(NULL),
+					gLoop120(NULL), gBlop(NULL), gWoosh(NULL) {}
 
 MySDL2::~MySDL2() { close(); }
 
@@ -52,8 +53,13 @@ bool MySDL2::init()
 				}
 			}			
 		}
+	}
 
-		//gameState = MainMenu;
+	// Audio initalilize
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{
+		cout << "SDL_mixer could not initialize! SDL_mixer Error: \n", Mix_GetError();
+		success = false;
 	}
 
 	return success;
@@ -70,6 +76,37 @@ bool MySDL2::loadMedia(string path)
 		success = false;
 	}
 	return success;
+}
+
+bool MySDL2::loadAudio()
+{
+	bool error = true;
+
+	//Load music
+	gLoop120 = Mix_LoadMUS("Audio/Loop_120_bpm.wav");
+
+	if (gLoop120 == NULL)
+	{
+		cout << "Failed to load beat music! SDL_mixer Error: " << Mix_GetError() << "\n";
+		error = false;
+	}
+
+	//Load sound effects
+	gBlop = Mix_LoadWAV("Audio/Blop.wav");
+
+	if (gBlop == NULL)
+	{
+		cout << "Failed to load scratch sound effect! SDL_mixer Error: " << Mix_GetError() << "\n";
+		error = false;
+	}
+
+	gWoosh = Mix_LoadWAV("Audio/Woosh.wav");
+	if (gWoosh == NULL)
+	{
+		cout << "Failed to load high sound effect! SDL_mixer Error: " << Mix_GetError() << "\n";
+		error = false;
+	}
+	return error;
 }
 
 SDL_Texture* MySDL2::loadTexture(string path)
@@ -112,6 +149,14 @@ void MySDL2::close()
 	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
+
+	//Free the audio effects
+	Mix_FreeChunk(gBlop);
+	Mix_FreeChunk(gWoosh);
+	Mix_FreeMusic(gLoop120);
+	gBlop		= NULL;
+	gWoosh		= NULL;
+	gLoop120	= NULL;
 }
 
 void MySDL2::renderClear() { SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF); SDL_RenderClear(gRenderer); }
@@ -123,4 +168,16 @@ void MySDL2::renderUpdate() { SDL_RenderPresent(gRenderer); }
 void MySDL2::myRenderCopy(SDL_Texture* texture, SDL_Rect* myRect)
 {
 	SDL_RenderCopy(gRenderer, texture, NULL, myRect);
+}
+
+void MySDL2::playLoop120()
+{
+	if (Mix_PlayingMusic() == 0)
+		Mix_PlayMusic(gLoop120, -1);
+		//Mix_PlayChannel(-1, gWoosh, 0);
+}
+
+void MySDL2::playerBlop()
+{
+	Mix_PlayChannel(-1, gBlop, 0);
 }

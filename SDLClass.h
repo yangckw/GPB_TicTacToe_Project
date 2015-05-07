@@ -3,7 +3,6 @@
 /************************************************/
 #include <iostream>
 #include <string>
-#include <stdio.h>			// Added because mentioned: http://lazyfoo.net/tutorials/SDL/21_sound_effects_and_music/index.php
 #include <cmath>
 
 #if _WIN32
@@ -13,6 +12,7 @@
 #else
 #include <SDL2\SDL.h>
 #include <SDL\SDL_image.h>	// Wait, why are the slashes facing the same way as the ones for _WIN32 above?
+#include <SDL\SDL_mixer.h>
 #endif
 
 using std::string;
@@ -33,19 +33,24 @@ private:
 	SDL_Window* gWindow;
 	SDL_Renderer* gRenderer;
 	SDL_Texture* gTexture;
-
+	Mix_Music *gLoop120;
+	Mix_Chunk *gBlop;
+	Mix_Chunk *gWoosh;
 public:
 	MySDL2();
 	~MySDL2();
 
 	bool init();
 	bool loadMedia(string filename);
+	bool loadAudio();
 	SDL_Texture* loadTexture(string path);
 	void renderClear();
 	void render();
 	void myRenderCopy(SDL_Texture* texture, SDL_Rect* rect);
 	void renderUpdate();
 	void close();
+	void playLoop120();
+	void playerBlop();
 
 	// Getters
 	int returnWidth()							{ return SCREEN_WIDTH; }

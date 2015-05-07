@@ -3,7 +3,7 @@
 /*************************************************************/
 #include "SDLClass.h"
 
-enum GameState {NullState, Init, loadMedia, SplashScreen, MainMenu, GameRunning, ExitGame};
+enum GameState {NullState, Init, SplashScreen, MainMenu, GameRunning, ExitGame};
 
 struct Player
 {
@@ -36,13 +36,8 @@ public:
 	int mouseX;
 	int mouseY;
 
-	Mix_Music *gLoop;
-	Mix_Chunk *gBlop;
-	Mix_Chunk *gWoosh;
-
 	void showSplashScreen();
 	bool Initialize();
-	void loadMedia();
 	void mainMenu();
 	bool runGame();
 	void gameUpdate();
