@@ -20,6 +20,15 @@ Game::Game() : gameState(NullState), logoImage(NULL), mainMenuRect(NULL), startB
 	quitButtonRect		= new SDL_Rect;
 }
 
+
+	//The music that will be played
+	Mix_Music *gLoop = NULL;
+
+	//The sound effects that will be used
+	Mix_Chunk *gBlop = NULL;
+	Mix_Chunk *gWoosh = NULL;
+
+
 bool Game::Initialize()
 {
 	bool error = true;
@@ -33,32 +42,44 @@ bool Game::Initialize()
 
 	// Input initalilize
 
-	// Audio initalize
+
+	// Audio initalilize
+//	if (!sdl->loadMedia()) { cout << "Failed to initialize!\n"; error = false; }
+
+
+
+	//Initialize SDL_mixer
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+	{	printf("SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError());
+		error = false;	}
 
 	return error;
 }
 
-/*
-	//The music that will be played
-	Mix_Music *gLoop = NULL;
-
-	//The sound effects that will be used
-	Mix_Chunk *gBlop = NULL;
-	Mix_Chunk *gWoosh = NULL;
-*/
-
-bool Game::loadAudio()
+bool Game::loadMedia()
 {
+	//Loading success flag
 	bool error = true;
 
 	//Load music
 	gLoop = Mix_LoadMUS("Audio/Loop_120_bpm.wav");
-	
+	if (gLoop == NULL)
+	{	printf("Failed to load beat music! SDL_mixer Error: %s\n", Mix_GetError());
+		error = false;	}
+
 	//Load sound effects
 	gBlop = Mix_LoadWAV("Audio/Blop.wav");
+	if (gBlop == NULL)
+	{	printf("Failed to load scratch sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		error = false;	}
+
 	gWoosh = Mix_LoadWAV("Audio/Woosh.wav");
+	if (gWoosh == NULL)
+	{	printf("Failed to load high sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		error = false;	}
 
 	return error;
+	
 }
 
 void Game::mainMenu()
@@ -80,6 +101,10 @@ void Game::mainMenu()
 	quitButtonRect->y = sdl->returnHeight() / 2 + 80;	// Move button down by 80
 	quitButtonRect->w = 100;
 	quitButtonRect->h = 40;
+
+	// Play file
+//	Mix_PlayMusic( gLoop, -1);
+//	Mix_PlayChannel(-1, gBlop, 0);
 	
 	// Render the splash screen
 	sdl->renderClear();
@@ -146,8 +171,6 @@ void Game::showSplashScreen()
 	SDL_Texture* splashImage = sdl->loadTexture("TicTacToeLogo.png");
 	if (splashImage == NULL) { cout << "Error Loading Splash Image!!\n"; }
 	SDL_Rect* logoImageRect = new SDL_Rect;
-
-
 	
 	logoImageRect->x = 0;
 	logoImageRect->y = 0;
@@ -158,14 +181,6 @@ void Game::showSplashScreen()
 	sdl->renderClear();
 	sdl->myRenderCopy(splashImage, logoImageRect);
 	sdl->renderUpdate();
-
-
-	//Play the music
-	if (Mix_PlayingMusic() == 0)
-	{
-		//Play the music
-		Mix_PlayMusic(gLoop, -1);
-	}
 
 	// Pause the splash screen for 3 seconds *modified for faster testing
 	SDL_Delay(3000);
