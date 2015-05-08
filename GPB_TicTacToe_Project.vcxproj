@@ -80,6 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameClass.cpp" />
     <ClCompile Include="SDLClass.cpp" />
     <ClCompile Include="Source.cpp" />

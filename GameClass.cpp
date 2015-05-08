@@ -27,6 +27,9 @@ bool Game::Initialize()
 	// SDL initialize
 	if (!sdl->init()) { cout << "Failed to initialize!\n"; error = false; }
 
+	// Load audio files
+	error = sdl->loadAudio();
+
 	return error;
 }
 
@@ -66,7 +69,7 @@ void Game::mainMenu()
 	{
 		if (e.type == SDL_MOUSEBUTTONDOWN) 
 		{
-			//gameState = GameRunning;
+			gameState = GameRunning;
 			sdl->playerBlop();
 		}
 	}
@@ -75,13 +78,20 @@ void Game::mainMenu()
 	if (mouseX >= quitButtonRect->x && mouseX <= quitButtonRect->x + quitButtonRect->w &&
 		mouseY >= quitButtonRect->y && mouseY <= quitButtonRect->y + quitButtonRect->h)
 	{
-		if (e.type == SDL_MOUSEBUTTONDOWN) { gameState = ExitGame; Mix_HaltMusic(); }
+		if (e.type == SDL_MOUSEBUTTONDOWN) 
+		{ 
+			gameState = ExitGame;
+			sdl->playerBlop();
+			Mix_HaltMusic(); 
+		}
 	}
 }
 
-bool Game::runGame()
+void Game::runGame()
 {
-	return true;
+	sdl->renderClear();
+	sdl->renderBoard();
+	sdl->renderUpdate();
 }
 
 void Game::exitGame()

@@ -33,6 +33,9 @@ private:
 	SDL_Window* gWindow;
 	SDL_Renderer* gRenderer;
 	SDL_Texture* gTexture;
+	SDL_Texture* gameBoard;
+	SDL_Texture* xTile;
+	SDL_Texture* oTile;
 	Mix_Music *gLoop120;
 	Mix_Chunk *gBlop;
 	Mix_Chunk *gWoosh;
@@ -51,6 +54,7 @@ public:
 	void close();
 	void playLoop120();
 	void playerBlop();
+	void renderBoard();
 
 	// Getters
 	int returnWidth()							{ return SCREEN_WIDTH; }

@@ -33,6 +33,7 @@ int main(int argc, char* args[])
 			game->mainMenu();
 			break;
 		case GameRunning:
+			game->runGame();
 			break;
 		case ExitGame:
 			runEngine = false;

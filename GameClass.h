@@ -39,7 +39,7 @@ public:
 	void showSplashScreen();
 	bool Initialize();
 	void mainMenu();
-	bool runGame();
+	void runGame();
 	void gameUpdate();
 	void exitGame();
 

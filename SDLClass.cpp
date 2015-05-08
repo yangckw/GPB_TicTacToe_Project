@@ -1,8 +1,9 @@
 #include "SDLClass.h"
 
 MySDL2::MySDL2() : gScreenSurface(NULL), gRenderer(NULL),
-					SCREEN_HEIGHT(480), SCREEN_WIDTH(640), gWindow(NULL), gTexture(NULL),
-					gLoop120(NULL), gBlop(NULL), gWoosh(NULL) {}
+					SCREEN_HEIGHT(600), SCREEN_WIDTH(800), gWindow(NULL), gTexture(NULL),
+					gLoop120(NULL), gBlop(NULL), gWoosh(NULL), gameBoard(NULL), xTile(NULL),
+					oTile(NULL) {}
 
 MySDL2::~MySDL2() { close(); }
 
@@ -61,6 +62,16 @@ bool MySDL2::init()
 		cout << "SDL_mixer could not initialize! SDL_mixer Error: \n", Mix_GetError();
 		success = false;
 	}
+
+	// Load the background, X, O images
+	gameBoard = loadTexture("Images/Board.png");
+	if (gameBoard == NULL) { cout << "Board.png failed to load!\n"; success = false; }
+	
+	xTile = loadTexture("Images/x.png");
+	if (xTile == NULL) { cout << "x.png failed to load\n"; success = false; }
+
+	oTile = loadTexture("Images/o.png");
+	if (oTile == NULL) { cout << "o.png failed to load\n"; success = false; }
 
 	return success;
 }
@@ -139,6 +150,12 @@ void MySDL2::close()
 	//Free loaded image
 	SDL_DestroyTexture(gTexture);
 	gTexture = NULL;
+	SDL_DestroyTexture(gameBoard);
+	gameBoard = NULL;
+	SDL_DestroyTexture(xTile);
+	xTile = NULL;
+	SDL_DestroyTexture(oTile);
+	oTile = NULL;
 
 	//Destroy window
 	SDL_DestroyRenderer(gRenderer);
@@ -174,10 +191,34 @@ void MySDL2::playLoop120()
 {
 	if (Mix_PlayingMusic() == 0)
 		Mix_PlayMusic(gLoop120, -1);
-		//Mix_PlayChannel(-1, gWoosh, 0);
 }
 
 void MySDL2::playerBlop()
 {
 	Mix_PlayChannel(-1, gBlop, 0);
+}
+
+void MySDL2::renderBoard()
+{
+	// Render the game board
+	SDL_Rect boardSide;
+	boardSide.x = 0;
+	boardSide.y = 0;
+	boardSide.w = 600;
+	boardSide.h = 600;
+	SDL_RenderSetViewport(gRenderer, &boardSide);
+
+	// Render Texture to screen
+	SDL_RenderCopy(gRenderer, gameBoard, NULL, NULL);
+
+	// Render the score side
+	SDL_Rect scoreSide;
+	scoreSide.x = 600;
+	scoreSide.y = 0;
+	scoreSide.w = 200;
+	scoreSide.y = 600;
+	SDL_RenderSetViewport(gRenderer, &scoreSide);
+
+	// Render Texture to screen
+	SDL_RenderCopy(gRenderer, oTile, NULL, NULL);
 }
