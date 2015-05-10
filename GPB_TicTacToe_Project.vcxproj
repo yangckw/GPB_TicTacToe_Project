@@ -82,12 +82,15 @@
   <ItemGroup>
     <ClCompile Include="GameBoard.cpp" />
     <ClCompile Include="GameClass.cpp" />
+    <ClCompile Include="SDLAudio.cpp" />
     <ClCompile Include="SDLClass.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameBoard.h" />
     <ClInclude Include="GameClass.h" />
+    <ClInclude Include="Globals.h" />
+    <ClInclude Include="SDLAudio.h" />
     <ClInclude Include="SDLClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

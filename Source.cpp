@@ -20,10 +20,8 @@ int main(int argc, char* args[])
 		switch (game->returnState())
 		{
 		case Init:
-			isInitialized = game->Initialize();
-
-			if (isInitialized)	{ game->setState(SplashScreen); }
-			else				{ game->setState(ExitGame); }
+			if (game->Initialize())	{ game->setState(SplashScreen); }
+			else					{ game->setState(ExitGame); }
 
 			break;
 		case SplashScreen:
@@ -34,6 +32,7 @@ int main(int argc, char* args[])
 			break;
 		case GameRunning:
 			game->runGame();
+			game->checkForWinner();
 			break;
 		case ExitGame:
 			runEngine = false;

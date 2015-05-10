@@ -1,9 +1,7 @@
 #include "SDLClass.h"
 
-MySDL2::MySDL2() : gScreenSurface(NULL), gRenderer(NULL),
-					SCREEN_HEIGHT(600), SCREEN_WIDTH(800), gWindow(NULL), gTexture(NULL),
-					gLoop120(NULL), gBlop(NULL), gWoosh(NULL), gameBoard(NULL), xTile(NULL),
-					oTile(NULL) {}
+MySDL2::MySDL2() : gScreenSurface(NULL), gRenderer(NULL), SCREEN_HEIGHT(600), 
+					SCREEN_WIDTH(800), gWindow(NULL), windowName("") {}
 
 MySDL2::~MySDL2() { close(); }
 
@@ -27,7 +25,7 @@ bool MySDL2::init()
 		}
 
 		// Create window
-		gWindow = SDL_CreateWindow("SDL tutorial 7", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+		gWindow = SDL_CreateWindow(windowName, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
 		if (gWindow == NULL)
 		{
@@ -55,69 +53,20 @@ bool MySDL2::init()
 			}			
 		}
 	}
-
-	// Audio initalilize
-	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-	{
-		cout << "SDL_mixer could not initialize! SDL_mixer Error: \n", Mix_GetError();
-		success = false;
-	}
-
-	// Load the background, X, O images
-	gameBoard = loadTexture("Images/Board.png");
-	if (gameBoard == NULL) { cout << "Board.png failed to load!\n"; success = false; }
-	
-	xTile = loadTexture("Images/x.png");
-	if (xTile == NULL) { cout << "x.png failed to load\n"; success = false; }
-
-	oTile = loadTexture("Images/o.png");
-	if (oTile == NULL) { cout << "o.png failed to load\n"; success = false; }
-
 	return success;
 }
 
-bool MySDL2::loadMedia(string path)
+bool MySDL2::loadMedia(SDL_Texture* image, string path)
 {
 	bool success = true;
 
-	gTexture = loadTexture(path);
-	if (gTexture == NULL)
+	image = loadTexture(path);
+	if (image == NULL)
 	{
 		cout << "Failed to load texture image!\n";
 		success = false;
 	}
 	return success;
-}
-
-bool MySDL2::loadAudio()
-{
-	bool error = true;
-
-	//Load music
-	gLoop120 = Mix_LoadMUS("Audio/Loop_120_bpm.wav");
-
-	if (gLoop120 == NULL)
-	{
-		cout << "Failed to load beat music! SDL_mixer Error: " << Mix_GetError() << "\n";
-		error = false;
-	}
-
-	//Load sound effects
-	gBlop = Mix_LoadWAV("Audio/Blop.wav");
-
-	if (gBlop == NULL)
-	{
-		cout << "Failed to load scratch sound effect! SDL_mixer Error: " << Mix_GetError() << "\n";
-		error = false;
-	}
-
-	gWoosh = Mix_LoadWAV("Audio/Woosh.wav");
-	if (gWoosh == NULL)
-	{
-		cout << "Failed to load high sound effect! SDL_mixer Error: " << Mix_GetError() << "\n";
-		error = false;
-	}
-	return error;
 }
 
 SDL_Texture* MySDL2::loadTexture(string path)
@@ -147,16 +96,6 @@ SDL_Texture* MySDL2::loadTexture(string path)
 
 void MySDL2::close()
 {
-	//Free loaded image
-	SDL_DestroyTexture(gTexture);
-	gTexture = NULL;
-	SDL_DestroyTexture(gameBoard);
-	gameBoard = NULL;
-	SDL_DestroyTexture(xTile);
-	xTile = NULL;
-	SDL_DestroyTexture(oTile);
-	oTile = NULL;
-
 	//Destroy window
 	SDL_DestroyRenderer(gRenderer);
 	SDL_DestroyWindow(gWindow);
@@ -166,14 +105,6 @@ void MySDL2::close()
 	//Quit SDL subsystems
 	IMG_Quit();
 	SDL_Quit();
-
-	//Free the audio effects
-	Mix_FreeChunk(gBlop);
-	Mix_FreeChunk(gWoosh);
-	Mix_FreeMusic(gLoop120);
-	gBlop		= NULL;
-	gWoosh		= NULL;
-	gLoop120	= NULL;
 }
 
 void MySDL2::renderClear() { SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF); SDL_RenderClear(gRenderer); }
@@ -182,43 +113,23 @@ void MySDL2::render() { SDL_RenderPresent(gRenderer); }
 
 void MySDL2::renderUpdate() { SDL_RenderPresent(gRenderer); }
 
-void MySDL2::myRenderCopy(SDL_Texture* texture, SDL_Rect* myRect)
+void MySDL2::myRenderCopy(SDL_Texture* texture, SDL_Rect myRect)
 {
-	SDL_RenderCopy(gRenderer, texture, NULL, myRect);
+	SDL_RenderCopy(gRenderer, texture, NULL, &myRect);
 }
 
-void MySDL2::playLoop120()
+SDL_Rect MySDL2::setRect(SDL_Rect rect, int x, int y, int w, int h)
 {
-	if (Mix_PlayingMusic() == 0)
-		Mix_PlayMusic(gLoop120, -1);
+	rect.x = x;
+	rect.y = y;
+	rect.h = h;
+	rect.w = w;
+
+	return rect;
 }
 
-void MySDL2::playerBlop()
+void MySDL2::setScreenSize(int height, int width)
 {
-	Mix_PlayChannel(-1, gBlop, 0);
-}
-
-void MySDL2::renderBoard()
-{
-	// Render the game board
-	SDL_Rect boardSide;
-	boardSide.x = 0;
-	boardSide.y = 0;
-	boardSide.w = 600;
-	boardSide.h = 600;
-	SDL_RenderSetViewport(gRenderer, &boardSide);
-
-	// Render Texture to screen
-	SDL_RenderCopy(gRenderer, gameBoard, NULL, NULL);
-
-	// Render the score side
-	SDL_Rect scoreSide;
-	scoreSide.x = 600;
-	scoreSide.y = 0;
-	scoreSide.w = 200;
-	scoreSide.y = 600;
-	SDL_RenderSetViewport(gRenderer, &scoreSide);
-
-	// Render Texture to screen
-	SDL_RenderCopy(gRenderer, oTile, NULL, NULL);
+	SCREEN_HEIGHT = height;
+	SCREEN_WIDTH = width;
 }
