@@ -105,8 +105,10 @@ void MySDL2::myRenderCopy(SDL_Texture* texture, SDL_Rect myRect)
 	SDL_RenderCopy(gRenderer, texture, NULL, &myRect);
 }
 
-SDL_Rect MySDL2::setRect(SDL_Rect rect, int x, int y, int w, int h)
+SDL_Rect MySDL2::setRect(int x, int y, int w, int h)
 {
+	SDL_Rect rect;
+
 	rect.x = x;
 	rect.y = y;
 	rect.h = h;

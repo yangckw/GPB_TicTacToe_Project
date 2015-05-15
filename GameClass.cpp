@@ -55,13 +55,13 @@ bool Game::Initialize()
 void Game::mainMenu()
 {
 	SDL_Rect mainMenuRect = { 0, 0, 0, 0 };
-	mainMenuRect = sdl->setRect(mainMenuRect, 0, 0, sdl->returnWidth(), sdl->returnHeight());
+	mainMenuRect = sdl->setRect(0, 0, sdl->returnWidth(), sdl->returnHeight());
 	
 	SDL_Rect startButtonRect = { 0, 0, 0, 0 };
-	startButtonRect = sdl->setRect(startButtonRect, sdl->returnWidth() / 2 - 50, sdl->returnHeight() / 2, 100, 40);
+	startButtonRect = sdl->setRect(sdl->returnWidth() / 2 - 50, sdl->returnHeight() / 2, 100, 40);
 
 	SDL_Rect quitButtonRect = { 0, 0, 0, 0 };
-	quitButtonRect = sdl->setRect(quitButtonRect, sdl->returnWidth() / 2 - 50, sdl->returnHeight() / 2 + 80, 100, 40);
+	quitButtonRect = sdl->setRect(sdl->returnWidth() / 2 - 50, sdl->returnHeight() / 2 + 80, 100, 40);
 	
 	// Render the splash screen
 	sdl->renderClear();
@@ -99,22 +99,18 @@ void Game::mainMenu()
 
 void Game::runGame()
 {
-	SDL_Event e;
-	SDL_PollEvent(&e);
-
 	// Create board rect
 	SDL_Rect boardSide		= { 0, 0, 0, 0 };
 	SDL_Rect scoreSide		= { 0, 0, 0, 0 };
 
 	sdl->renderClear();			// Clear the screen
 		
-	boardSide = sdl->setRect(boardSide, 0, 0, 600, 600);
+	boardSide = sdl->setRect(0, 0, 600, 600);
 	SDL_RenderSetViewport(sdl->returnRender(), &boardSide);
 
 	// Render Texture to screen
 	SDL_RenderCopy(sdl->returnRender(), gameBoard, NULL, NULL);
 
-	//renderBoard(e);
 	for (int i = 0; i < 9; i++)
 	{
 		// Render the board
@@ -124,11 +120,11 @@ void Game::runGame()
 	/***************************************************************/
 	//						Score panel
 	/***************************************************************/
-	scoreSide = sdl->setRect(scoreSide, 600, 0, 200, 600);
+	scoreSide = sdl->setRect(600, 0, 200, 600);
 	SDL_RenderSetViewport(sdl->returnRender(), &scoreSide);
 	
 	// Render Texture to screen
-	SDL_RenderCopy(sdl->returnRender(), oTile, NULL, NULL);
+	SDL_RenderCopy(sdl->returnRender(), NULL, NULL, NULL);
 
 	// Render everything
 	sdl->renderUpdate();
@@ -172,7 +168,7 @@ void Game::showSplashScreen()
 	SDL_Rect logoImageRect = { 0, 0, 0, 0 };		// Initialize Rect
 
 	audio.playMusic(Loop120);
-	logoImageRect = sdl->setRect(logoImageRect, 0, 0, sdl->returnWidth(), sdl->returnHeight());
+	logoImageRect = sdl->setRect(0, 0, sdl->returnWidth(), sdl->returnHeight());
 
 	sdl->renderClear();
 	sdl->myRenderCopy(splashImage, logoImageRect);
@@ -198,69 +194,15 @@ void Game::checkForWinner(int &stat)
 	}
 }
 
-void Game::renderBoard(SDL_Event e)
-{
-	// An Array of Rects
-	SDL_Rect boardSquares[9] = { 0, 0, 0, 0 };
-
-	// Box 1
-	boardSquares[0] = sdl->setRect(boardSquares[0], 25, 25, 150, 150);
-
-	// Mouse checks for the buttons (Start)
-	if (mouseX >= boardSquares[0].x && mouseX <= boardSquares[0].x + boardSquares[0].w &&
-		mouseY >= boardSquares[0].y && mouseY <= boardSquares[0].y + boardSquares[0].h)
-	{
-		sdl->myRenderCopy(xTile, boardSquares[0]);
-		if (e.type == SDL_MOUSEBUTTONDOWN)
-		{
-			sdl->myRenderCopy(xTile, boardSquares[0]);
-			audio.playWave(Blop);
-			//else					{ sdl->myRenderCopy(oTile, boardSquares[0]); }
-		}
-	}
-	
-
-	// Box 2
-	boardSquares[1] = sdl->setRect(boardSquares[1], 225, 25, 150, 150);
-	sdl->myRenderCopy(xTile, boardSquares[1]);
-
-	// Box 3
-	boardSquares[2] = sdl->setRect(boardSquares[2], 425, 25, 150, 150);
-	sdl->myRenderCopy(xTile, boardSquares[2]);
-
-	// Box 4
-	boardSquares[3] = sdl->setRect(boardSquares[3], 25, 225, 150, 150);
-	sdl->myRenderCopy(xTile, boardSquares[3]);
-
-	// Box 5
-	boardSquares[4] = sdl->setRect(boardSquares[4], 225, 225, 150, 150);
-	sdl->myRenderCopy(xTile, boardSquares[4]);
-
-	// Box 6
-	boardSquares[5] = sdl->setRect(boardSquares[5], 425, 225, 150, 150);
-	sdl->myRenderCopy(xTile, boardSquares[5]);
-
-	// Box 7
-	boardSquares[6] = sdl->setRect(boardSquares[6], 25, 425, 150, 150);
-	sdl->myRenderCopy(xTile, boardSquares[6]);
-
-	// Box 8
-	boardSquares[7] = sdl->setRect(boardSquares[7], 225, 425, 150, 150);
-	sdl->myRenderCopy(xTile, boardSquares[7]);
-
-	// Box 8
-	boardSquares[8] = sdl->setRect(boardSquares[8], 425, 425, 150, 150);
-	sdl->myRenderCopy(xTile, boardSquares[8]);
-}
-
 void Game::mouseDownEvents(int num)
 {
 	bool downEvent = board->checkForClick(num, mouseX, mouseY);
 
 	if (downEvent && board->returnBoxState(num) == Empty && player1->isPlayer == true)
 	{
-		board->setTexture(xTile, num);
-		board->setSquareState(Xs, num);
+		board->setTexture(xTile, num);		// Set the Tile Texture
+		board->setSquareState(Xs, num);		// Set Tile state (Xs)
+		player1->playerScore += 100;		// Set player score to base plus 100
 
 		// Swap players
 		player1->isPlayer = false;
@@ -270,12 +212,20 @@ void Game::mouseDownEvents(int num)
 
 	else if (downEvent && board->returnBoxState(num) == Empty && player2->isPlayer == true)
 	{
-		board->setTexture(oTile, num);
-		board->setSquareState(Os, num);
+		board->setTexture(oTile, num);		// Set the Tile texture
+		board->setSquareState(Os, num);		// Set time state (Os)
+		player2->playerScore += 100;		// Set player score to base plus 100
 
 		// Swap players
 		player1->isPlayer = true;
 		player2->isPlayer = false;
 		round++;
 	}
+}
+
+void Game::resetViewArea()
+{
+	SDL_Rect empty;
+	empty = sdl->setRect(0, 0, 800, 600);
+	SDL_RenderSetViewport(sdl->returnRender(), NULL);
 }

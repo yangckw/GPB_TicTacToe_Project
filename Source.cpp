@@ -32,7 +32,11 @@ int main(int argc, char* args[])
 		case GameRunning:
 			game->runGame();
 			game->checkForWinner(variable);
-			if (variable > 0) { game->setState(ExitGame); }
+			if (variable > 0) 
+			{ 
+				game->setState(MainMenu);
+				game->resetViewArea();
+			}
 			break;
 		case ExitGame:
 			runEngine = false;

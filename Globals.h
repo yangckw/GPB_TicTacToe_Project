@@ -1,3 +1,5 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -19,3 +21,7 @@ using std::cout;
 #pragma comment(lib, "SDL2main.lib")
 #pragma comment(lib, "SDL2_image.lib")
 #pragma comment(lib, "SDL2_mixer.lib")
+
+#define State Beta
+#define Major 1
+#define Minor 1

@@ -60,8 +60,8 @@ public:
 	void gameUpdate();
 	void exitGame();
 	void checkForWinner(int &stat);
-	void renderBoard(SDL_Event);
 	void mouseDownEvents(int);
+	void resetViewArea();
 
 	GameState returnState()			{ return gameState; }
 	void setState(GameState state)	{ gameState = state; }

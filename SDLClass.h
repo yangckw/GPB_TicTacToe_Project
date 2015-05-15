@@ -28,7 +28,7 @@ public:
 	void renderUpdate();
 	void close();
 	void renderBoard();
-	SDL_Rect setRect(SDL_Rect, int, int, int, int);
+	SDL_Rect setRect(int, int, int, int);
 	void setScreenSize(int, int);	
 
 	// Getters
