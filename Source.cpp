@@ -6,12 +6,11 @@
 int main(int argc, char* args[])
 {	
 	Game *game = new Game();
-	Player player1(0, true, false);
-	Player player2(0, false, false);
 
 	bool runEngine = true;
 	bool isInitialized = false;
 	SDL_Event e;
+	int variable = 0;
 
 	game->setState(Init);
 
@@ -32,7 +31,8 @@ int main(int argc, char* args[])
 			break;
 		case GameRunning:
 			game->runGame();
-			game->checkForWinner();
+			game->checkForWinner(variable);
+			if (variable > 0) { game->setState(ExitGame); }
 			break;
 		case ExitGame:
 			runEngine = false;
@@ -42,6 +42,14 @@ int main(int argc, char* args[])
 		while (SDL_PollEvent(&e) != 0)
 		{
 			if (e.type == SDL_QUIT) { game->setState(ExitGame); }
+
+			if (e.type == SDL_MOUSEBUTTONDOWN)
+			{
+				for (int i = 0; i < 9; i++)
+				{
+					game->mouseDownEvents(i);
+				}
+			}
 		}
 
 		// Update mouse

@@ -56,19 +56,6 @@ bool MySDL2::init()
 	return success;
 }
 
-bool MySDL2::loadMedia(SDL_Texture* image, string path)
-{
-	bool success = true;
-
-	image = loadTexture(path);
-	if (image == NULL)
-	{
-		cout << "Failed to load texture image!\n";
-		success = false;
-	}
-	return success;
-}
-
 SDL_Texture* MySDL2::loadTexture(string path)
 {
 	SDL_Texture* newTexture = NULL;

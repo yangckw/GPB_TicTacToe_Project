@@ -17,6 +17,8 @@ Game::Game() : gameState(NullState), logoImage(NULL), startButton(NULL),
 				gameBoard(NULL), xTile(NULL), oTile(NULL), Loop120(NULL),
 				Blop(NULL), round(1)
 {
+	player1 = new Player(0, true, false);
+	player2 = new Player(0, false, false);
 }
 
 bool Game::Initialize()
@@ -97,29 +99,27 @@ void Game::mainMenu()
 
 void Game::runGame()
 {
+	SDL_Event e;
+	SDL_PollEvent(&e);
+
 	// Create board rect
 	SDL_Rect boardSide		= { 0, 0, 0, 0 };
 	SDL_Rect scoreSide		= { 0, 0, 0, 0 };
-	SDL_Rect boardSquares	= { 0, 0, 0, 0 };
 
 	sdl->renderClear();			// Clear the screen
 		
-	// Setup the board (600 x 600)
 	boardSide = sdl->setRect(boardSide, 0, 0, 600, 600);
 	SDL_RenderSetViewport(sdl->returnRender(), &boardSide);
 
-	// Set the square size for board
-	boardSquares = sdl->setRect(boardSquares, 0, 0, 30, 30);
-	board->setTexture(xTile, 0);
-
-	// Array to setup the board all the same size
-	board->setSquareSize(boardSquares, 10, 10);
-
-	// Squares
-	board->showSquare(sdl->returnRender(), 0);
-
 	// Render Texture to screen
 	SDL_RenderCopy(sdl->returnRender(), gameBoard, NULL, NULL);
+
+	//renderBoard(e);
+	for (int i = 0; i < 9; i++)
+	{
+		// Render the board
+		board->showSquare(sdl->returnRender(), i);
+	}
 
 	/***************************************************************/
 	//						Score panel
@@ -159,6 +159,10 @@ void Game::exitGame()
 	Mix_FreeMusic(Loop120);
 	Blop = NULL;
 	Loop120 = NULL;
+
+	// Clean up player class
+	if (player1) { delete player1; }
+	if (player2) { delete player2; }
 }
 
 void Game::gameUpdate() { }
@@ -179,15 +183,99 @@ void Game::showSplashScreen()
 	gameState = MainMenu;
 }
 
-void Game::checkForWinner()
+void Game::checkForWinner(int &stat)
 {
-	// check for winners
-	if (board->checkForXWinner())	{ /* future home */ }
-	if (board->CheckForOWinnder())	{ /*future home */ }
-	if (round == 9 && !board->checkForXWinner() && !board->CheckForOWinnder())
+	// Check for X winner
+	if (board->checkForXWinner())	{ stat = 1; }
+
+	// Check for O winner
+	if (board->CheckForOWinner())	{ stat = 2; }
+
+	// Check for tie
+	if (round == 10 && !board->checkForXWinner() && !board->CheckForOWinner())
 	{
-		// do something here
+		stat = 3;
+	}
+}
+
+void Game::renderBoard(SDL_Event e)
+{
+	// An Array of Rects
+	SDL_Rect boardSquares[9] = { 0, 0, 0, 0 };
+
+	// Box 1
+	boardSquares[0] = sdl->setRect(boardSquares[0], 25, 25, 150, 150);
+
+	// Mouse checks for the buttons (Start)
+	if (mouseX >= boardSquares[0].x && mouseX <= boardSquares[0].x + boardSquares[0].w &&
+		mouseY >= boardSquares[0].y && mouseY <= boardSquares[0].y + boardSquares[0].h)
+	{
+		sdl->myRenderCopy(xTile, boardSquares[0]);
+		if (e.type == SDL_MOUSEBUTTONDOWN)
+		{
+			sdl->myRenderCopy(xTile, boardSquares[0]);
+			audio.playWave(Blop);
+			//else					{ sdl->myRenderCopy(oTile, boardSquares[0]); }
+		}
+	}
+	
+
+	// Box 2
+	boardSquares[1] = sdl->setRect(boardSquares[1], 225, 25, 150, 150);
+	sdl->myRenderCopy(xTile, boardSquares[1]);
+
+	// Box 3
+	boardSquares[2] = sdl->setRect(boardSquares[2], 425, 25, 150, 150);
+	sdl->myRenderCopy(xTile, boardSquares[2]);
+
+	// Box 4
+	boardSquares[3] = sdl->setRect(boardSquares[3], 25, 225, 150, 150);
+	sdl->myRenderCopy(xTile, boardSquares[3]);
+
+	// Box 5
+	boardSquares[4] = sdl->setRect(boardSquares[4], 225, 225, 150, 150);
+	sdl->myRenderCopy(xTile, boardSquares[4]);
+
+	// Box 6
+	boardSquares[5] = sdl->setRect(boardSquares[5], 425, 225, 150, 150);
+	sdl->myRenderCopy(xTile, boardSquares[5]);
+
+	// Box 7
+	boardSquares[6] = sdl->setRect(boardSquares[6], 25, 425, 150, 150);
+	sdl->myRenderCopy(xTile, boardSquares[6]);
+
+	// Box 8
+	boardSquares[7] = sdl->setRect(boardSquares[7], 225, 425, 150, 150);
+	sdl->myRenderCopy(xTile, boardSquares[7]);
+
+	// Box 8
+	boardSquares[8] = sdl->setRect(boardSquares[8], 425, 425, 150, 150);
+	sdl->myRenderCopy(xTile, boardSquares[8]);
+}
+
+void Game::mouseDownEvents(int num)
+{
+	bool downEvent = board->checkForClick(num, mouseX, mouseY);
+
+	if (downEvent && board->returnBoxState(num) == Empty && player1->isPlayer == true)
+	{
+		board->setTexture(xTile, num);
+		board->setSquareState(Xs, num);
+
+		// Swap players
+		player1->isPlayer = false;
+		player2->isPlayer = true;
+		round++;
 	}
 
-	round++;
+	else if (downEvent && board->returnBoxState(num) == Empty && player2->isPlayer == true)
+	{
+		board->setTexture(oTile, num);
+		board->setSquareState(Os, num);
+
+		// Swap players
+		player1->isPlayer = true;
+		player2->isPlayer = false;
+		round++;
+	}
 }

@@ -16,12 +16,12 @@ enum GameState {NullState, Init, SplashScreen, MainMenu, GameRunning, ExitGame};
 struct Player
 {
 	int playerScore;
-	bool isPlayerX;
+	bool isPlayer;
 	bool isWinner;
 	Player(int score, bool playerX, bool winner)
 	{
 		playerScore	= score;
-		isPlayerX	= playerX;
+		isPlayer	= playerX;
 		isWinner	= winner;
 	}
 };
@@ -45,18 +45,23 @@ private:
 	Mix_Music *Loop120;
 	Mix_Chunk *Blop;
 public:
+	Player *player1;
+	Player *player2;
 	Game();
 	~Game();
 	int mouseX;
 	int mouseY;
 
+	bool loadMedia(SDL_Texture*, string filename);
 	void showSplashScreen();
 	bool Initialize();
 	void mainMenu();
 	void runGame();
 	void gameUpdate();
 	void exitGame();
-	void checkForWinner();
+	void checkForWinner(int &stat);
+	void renderBoard(SDL_Event);
+	void mouseDownEvents(int);
 
 	GameState returnState()			{ return gameState; }
 	void setState(GameState state)	{ gameState = state; }

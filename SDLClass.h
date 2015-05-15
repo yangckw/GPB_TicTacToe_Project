@@ -20,7 +20,6 @@ public:
 	~MySDL2();
 
 	bool init();
-	bool loadMedia(SDL_Texture*, string filename);
 	bool loadAudio();
 	SDL_Texture* loadTexture(string path);
 	void renderClear();
