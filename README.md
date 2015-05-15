@@ -5,6 +5,8 @@ This project and all of its contents are a joint venture between myself and Adam
 
 This project was written using C++ OOP and SDL2 library from Simple Direct Media.  The link will be provided below.  Using Microsoft's Visual studios 2013 we configured and compiled our project using the basic's from LazyFoo's website.  That link will also be provided below.
 
+Also, We want to take this time to thank <i><b>Brandom Locker</i></b> from <b>Shadow Fall studios</b> for consulting on various coding design decisions.  Without whom I might not have been able to move forward as quickly as we have been.
+
 Please enjoy and have fun.<br><br>
 Respectfully,<br>
 Westwood Students
