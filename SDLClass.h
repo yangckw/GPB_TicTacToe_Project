@@ -25,11 +25,18 @@ public:
 	void renderClear();
 	void render();
 	void myRenderCopy(SDL_Texture* texture, SDL_Rect rect);
-	void renderUpdate();
 	void close();
 	void renderBoard();
 	SDL_Rect setRect(int, int, int, int);
-	void setScreenSize(int, int);	
+	void setScreenSize(int, int);
+
+	void renderText( 
+					SDL_Rect quad,
+					SDL_Texture* texture,
+					SDL_Rect* clip = NULL,
+					double angle = 0.0, 
+					SDL_Point* center = NULL, 
+					SDL_RendererFlip flip = SDL_FLIP_NONE);
 
 	// Getters
 	int returnWidth()							{ return SCREEN_WIDTH; }

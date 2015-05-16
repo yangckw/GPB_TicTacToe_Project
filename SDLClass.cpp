@@ -98,8 +98,6 @@ void MySDL2::renderClear() { SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF,
 
 void MySDL2::render() { SDL_RenderPresent(gRenderer); }
 
-void MySDL2::renderUpdate() { SDL_RenderPresent(gRenderer); }
-
 void MySDL2::myRenderCopy(SDL_Texture* texture, SDL_Rect myRect)
 {
 	SDL_RenderCopy(gRenderer, texture, NULL, &myRect);
@@ -121,4 +119,23 @@ void MySDL2::setScreenSize(int height, int width)
 {
 	SCREEN_HEIGHT = height;
 	SCREEN_WIDTH = width;
+}
+
+void MySDL2::renderText(
+				SDL_Rect quad,
+				SDL_Texture* texture,
+				SDL_Rect* clip, 
+				double angle, 
+				SDL_Point* center, 
+				SDL_RendererFlip flip)
+{
+	//Set clip rendering dimensions
+	if (clip != NULL)
+	{
+		quad.w = clip->w;
+		quad.h = clip->h;
+	}
+
+	//Render to screen
+	SDL_RenderCopyEx(gRenderer, texture, clip, &quad, angle, center, flip);
 }

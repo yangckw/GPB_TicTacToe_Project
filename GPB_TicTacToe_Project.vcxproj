@@ -84,9 +84,11 @@
     <ClCompile Include="GameClass.cpp" />
     <ClCompile Include="SDLAudio.cpp" />
     <ClCompile Include="SDLClass.cpp" />
+    <ClCompile Include="SDLText.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ADLText.h" />
     <ClInclude Include="GameBoard.h" />
     <ClInclude Include="GameClass.h" />
     <ClInclude Include="Globals.h" />

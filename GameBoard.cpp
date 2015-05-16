@@ -45,7 +45,7 @@ bool GameBoard::checkSlotO(int num)
 {
 	bool taken = false;
 
-	if (board[num].state == Os) { taken = true; }
+	if (board[num].state == Os)		{ taken = true; }
 
 	return taken;
 }
@@ -71,11 +71,7 @@ void GameBoard::showSquare(SDL_Renderer* render, int num)
 
 void GameBoard::closeGameBoard()
 {
-	if (board) 
-	{
-		for (int i = 0; i < 9; i++)
-			delete [i] board; 
-	}
+	if (board) { delete[] board; }
 }
 
 bool GameBoard::checkForXWinner()
@@ -113,6 +109,7 @@ bool GameBoard::CheckForOWinner()
 	{
 		isWinner = true;
 	}
+
 	return isWinner;
 }
 
@@ -134,10 +131,7 @@ bool GameBoard::checkForClick(int num, int mouseX, int mouseY)
 	if (mouseX >= board[num].box.x && mouseX <= board[num].box.x + board[num].box.w &&
 		mouseY >= board[num].box.y && mouseY <= board[num].box.y + board[num].box.h)
 	{
-		if (board[num].state == Empty)
-		{
-			click = true;
-		}
+		if (board[num].state == Empty)		{ click = true; }
 	}
 
 	return click;

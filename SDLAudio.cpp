@@ -2,7 +2,7 @@
 
 bool SDLAudio::initAudio()
 {
-	int success = true;
+	bool success = true;
 
 	// Audio initalilize
 	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)

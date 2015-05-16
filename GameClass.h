@@ -7,6 +7,7 @@
 #include "SDLClass.h"
 #include "GameBoard.h"
 #include "SDLAudio.h"
+#include "ADLText.h"
 
 enum GameState {NullState, Init, SplashScreen, MainMenu, GameRunning, ExitGame};
 
@@ -33,6 +34,7 @@ private:
 	GameState gameState;
 	MySDL2 *sdl = new MySDL2;
 	SDLAudio audio;
+	SDLText sdltext;
 	GameBoard *board = new GameBoard;
 
 	SDL_Texture* splashImage;
@@ -44,6 +46,7 @@ private:
 	SDL_Texture* oTile;
 	Mix_Music *Loop120;
 	Mix_Chunk *Blop;
+	TTF_Font *savoye;
 public:
 	Player *player1;
 	Player *player2;
@@ -57,7 +60,6 @@ public:
 	bool Initialize();
 	void mainMenu();
 	void runGame();
-	void gameUpdate();
 	void exitGame();
 	void checkForWinner(int &stat);
 	void mouseDownEvents(int);
