@@ -43,7 +43,7 @@ bool Game::Initialize()
 	quitButton		= sdl->loadTexture("Images/QuitButton.png");
 	Blop			= audio.loadWaveFiles(Blop, "Audio/Blop.wav");
 	Loop120			= audio.loadMusicFiles(Loop120, "Audio/Loop_120_bpm.wav");
-	savoye			= TTF_OpenFont("Fonts/Savoye_LET_Plain1.0.ttf", 12);
+	savoye			= TTF_OpenFont("Fonts/Savoye_LET_Plain1.0.ttf", 24);
 
 	// Checks for all loaded items.
 	if (gameBoard	== NULL)	{ cout << "Could not load gameBoard "		<< SDL_GetError() << "\n"; success = false; }
@@ -107,8 +107,6 @@ void Game::mainMenu()
 
 void Game::runGame()
 {
-	Text gameTitle;		// Initialize text for Game title
-
 	// Create board rect
 	SDL_Rect boardSide		= { 0, 0, 0, 0 };
 	SDL_Rect scoreSide		= { 0, 0, 0, 0 };
@@ -135,14 +133,18 @@ void Game::runGame()
 
 	// Render Texture to screen
 	SDL_RenderCopy(sdl->returnRender(), NULL, NULL, NULL);
+	//sdl->myRenderCopy(NULL, scoreSide);
 
 	/***************************************************************/
 	// Show score and game name
 	/***************************************************************/
-	/*gameTitle = sdltext.setFontColor(0, 0, 0);		// Sets text color
-	gameTitle = sdltext.setFontPosition(20, 20);
-	gameTitle = sdltext.renderToTexture(sdl->returnRender(), savoye, "Tic Tac Toe");
-	sdl->renderText(gameTitle.box, gameTitle.texture);*/
+	/*gameTitle.setFontColor(0, 0, 0);					// Sets text color
+	gameTitle.createMessage(savoye, "Tic Tac Toe");
+	gameTitle.renderText(sdl->returnRender());			// Render text to Texture
+	gameTitle.queryTexture();							// Set texture width and height
+	gameTitle.setTextPosition(75, 10);					// Set box position
+
+	sdl->myRenderCopy(gameTitle.texture, gameTitle.box);*/
 
 	// Render everything
 	sdl->render();
@@ -150,6 +152,8 @@ void Game::runGame()
 
 void Game::exitGame()
 {
+	gameTitle.~Text();		// Clean up Text Object
+
 	// Clear in reverse order
 	if (savoye		!= NULL)	{ TTF_CloseFont(savoye);			savoye		= NULL; }
 	if (Loop120		!= NULL)	{ Mix_FreeMusic(Loop120);			Loop120		= NULL; }

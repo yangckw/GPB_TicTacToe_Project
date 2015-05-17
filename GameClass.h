@@ -47,6 +47,7 @@ private:
 	Mix_Music *Loop120;
 	Mix_Chunk *Blop;
 	TTF_Font *savoye;
+	Text gameTitle;		// Initialize text for Game title
 public:
 	Player *player1;
 	Player *player2;

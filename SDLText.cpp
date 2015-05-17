@@ -63,18 +63,3 @@ bool SDLText::initText()
 	}
 	return success;
 }
-
-Text SDLText::setFontColor(int r, int g, int b)
-{
-	Text text;
-	text.textColor = { r, g, b };		// Update the text color
-	return text;
-}
-
-Text SDLText::setFontPosition(int x, int y)
-{
-	Text text;
-	text.box.x = x;
-	text.box.y = y;
-	return text;
-}

@@ -120,22 +120,3 @@ void MySDL2::setScreenSize(int height, int width)
 	SCREEN_HEIGHT = height;
 	SCREEN_WIDTH = width;
 }
-
-void MySDL2::renderText(
-				SDL_Rect quad,
-				SDL_Texture* texture,
-				SDL_Rect* clip, 
-				double angle, 
-				SDL_Point* center, 
-				SDL_RendererFlip flip)
-{
-	//Set clip rendering dimensions
-	if (clip != NULL)
-	{
-		quad.w = clip->w;
-		quad.h = clip->h;
-	}
-
-	//Render to screen
-	SDL_RenderCopyEx(gRenderer, texture, clip, &quad, angle, center, flip);
-}
